@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\NewsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,4 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Additional user endpoints
     Route::patch('/users/{id}/toggle-status', [UserController::class, 'toggleStatus']);
+    
+    // News management routes
+    Route::apiResource('news', NewsController::class);
 });
