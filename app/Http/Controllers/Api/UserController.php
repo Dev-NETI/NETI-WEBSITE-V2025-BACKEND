@@ -17,7 +17,7 @@ class UserController extends Controller
     {
         try {
             $users = User::with('roles')->orderBy('created_at', 'desc')->get();
-            
+
             $formattedUsers = $users->map(function ($user) {
                 return [
                     'id' => $user->id,
