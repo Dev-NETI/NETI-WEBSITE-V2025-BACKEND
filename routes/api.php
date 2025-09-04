@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\NewsController;
+use App\Http\Controllers\Events\EventController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/profile', [AdminAuthController::class, 'profile']);
         Route::get('/verify', [AdminAuthController::class, 'verify']);
     });
+
+    Route::middleware(['auth:sanctum'])->group(function () {
+        // Event management routes
+        Route::apiResource('events', EventController::class);
+    });
 });
 
 // Protected user route
@@ -41,7 +47,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Additional user endpoints
     Route::patch('/users/{id}/toggle-status', [UserController::class, 'toggleStatus']);
-    
+
     // News management routes
     Route::apiResource('news', NewsController::class);
 });
