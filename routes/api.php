@@ -41,7 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Additional user endpoints
     Route::patch('/users/{id}/toggle-status', [UserController::class, 'toggleStatus']);
-    
+
     // News management routes
     Route::apiResource('news', NewsController::class);
 });

@@ -39,8 +39,9 @@ class AdminAuthController extends Controller
         // Create Sanctum token
         $token = $user->createToken('admin-token')->plainTextToken;
 
-        $roleNames = $user->getRoleNames();
-        $primaryRole = $roleNames[0] ?? null;
+        // Use the direct role column, fallback to relationship
+        $primaryRole = $user->role ?? ($user->getRoleNames()[0] ?? null);
+        $roleNames = $user->role ? [$user->role] : $user->getRoleNames();
 
         return response()->json([
             'success' => true,
@@ -79,8 +80,9 @@ class AdminAuthController extends Controller
     public function profile(Request $request): JsonResponse
     {
         $user = $request->user()->load('roles');
-        $roleNames = $user->getRoleNames();
-        $primaryRole = $roleNames[0] ?? null;
+        // Use the direct role column, fallback to relationship
+        $primaryRole = $user->role ?? ($user->getRoleNames()[0] ?? null);
+        $roleNames = $user->role ? [$user->role] : $user->getRoleNames();
 
         return response()->json([
             'success' => true,
@@ -112,8 +114,9 @@ class AdminAuthController extends Controller
         }
 
         $user->load('roles');
-        $roleNames = $user->getRoleNames();
-        $primaryRole = $roleNames[0] ?? null;
+        // Use the direct role column, fallback to relationship
+        $primaryRole = $user->role ?? ($user->getRoleNames()[0] ?? null);
+        $roleNames = $user->role ? [$user->role] : $user->getRoleNames();
 
         return response()->json([
             'success' => true,
