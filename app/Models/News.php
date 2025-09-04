@@ -19,7 +19,6 @@ class News extends Model
         'author_title',
         'date',
         'image',
-        'featured',
         'status',
         'views',
         'created_by',
@@ -27,7 +26,6 @@ class News extends Model
 
     protected $casts = [
         'date' => 'date',
-        'featured' => 'boolean',
         'views' => 'integer',
     ];
 
