@@ -59,9 +59,10 @@ class NewsController extends Controller
         // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . Str::slug($data['title']) . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/news_images', $imageName);
-            $data['image'] = $imageName;
+            // $imageName = time() . '_' . Str::slug($data['title']) . '.' . $image->getClientOriginalExtension();
+            // $image->storeAs('public/news_images', $imageName);
+            $image->store('news_images', 'public');
+            $data['image'] = $image->hashName();
         }
 
         $news = News::create($data);

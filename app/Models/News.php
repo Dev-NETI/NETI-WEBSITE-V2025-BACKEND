@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class News extends Model
 {
     protected $table = 'news';
-    
+
     protected $fillable = [
         'title',
         'slug',
@@ -49,13 +49,13 @@ class News extends Model
     public static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($news) {
             if (empty($news->slug)) {
                 $news->slug = Str::slug($news->title);
             }
         });
-        
+
         static::updating(function ($news) {
             if ($news->isDirty('title') && empty($news->slug)) {
                 $news->slug = Str::slug($news->title);
