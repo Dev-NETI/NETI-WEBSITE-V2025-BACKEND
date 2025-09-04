@@ -50,4 +50,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // News management routes
     Route::apiResource('news', NewsController::class);
+    Route::patch('news/{id}/reactivate', [NewsController::class, 'reactivate']);
 });

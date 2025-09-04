@@ -41,7 +41,6 @@ class NewsController extends Controller
             'author_title' => 'required|string|max:255',
             'date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'featured' => 'boolean',
             'status' => 'in:published,archived',
         ]);
 
@@ -104,7 +103,6 @@ class NewsController extends Controller
             'author_title' => 'required|string|max:255',
             'date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'featured' => 'boolean',
             'status' => 'in:published,archived',
         ]);
 
@@ -126,9 +124,10 @@ class NewsController extends Controller
             }
 
             $image = $request->file('image');
-            $imageName = time() . '_' . Str::slug($data['title']) . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/news_images', $imageName);
-            $data['image'] = $imageName;
+            // $imageName = time() . '_' . Str::slug($data['title']) . '.' . $image->getClientOriginalExtension();
+            // $image->storeAs('public/news_images', $imageName);
+            $image->store('news_images', 'public');
+            $data['image'] = $image->hashName();
         }
 
         $news->update($data);
@@ -142,22 +141,35 @@ class NewsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Archive the specified resource (soft delete).
      */
     public function destroy(string $id): JsonResponse
     {
         $news = News::findOrFail($id);
 
-        // Delete associated image
-        if ($news->image && Storage::exists('public/news_images/' . $news->image)) {
-            Storage::delete('public/news_images/' . $news->image);
-        }
-
-        $news->delete();
+        // Archive the news article by setting status to 'archived'
+        $news->update(['status' => 'archived']);
 
         return response()->json([
             'success' => true,
-            'message' => 'News article deleted successfully'
+            'message' => 'News article archived successfully'
+        ]);
+    }
+
+    /**
+     * Reactivate an archived news article.
+     */
+    public function reactivate(string $id): JsonResponse
+    {
+        $news = News::findOrFail($id);
+
+        // Reactivate the news article by setting status to 'published'
+        $news->update(['status' => 'published']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'News article reactivated successfully',
+            'data' => $news->load('creator:id,name')
         ]);
     }
 }
