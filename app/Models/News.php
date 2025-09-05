@@ -19,6 +19,7 @@ class News extends Model
         'author_title',
         'date',
         'image',
+        'featured',
         'status',
         'views',
         'created_by',
@@ -27,9 +28,10 @@ class News extends Model
     protected $casts = [
         'date' => 'date',
         'views' => 'integer',
+        'featured' => 'boolean',
     ];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'read_time'];
 
     public function creator(): BelongsTo
     {
@@ -42,6 +44,13 @@ class News extends Model
             return asset('storage/news_images/' . $this->image);
         }
         return null;
+    }
+
+    public function getReadTimeAttribute(): string
+    {
+        $wordCount = str_word_count(strip_tags($this->content));
+        $minutes = ceil($wordCount / 200); // Average reading speed: 200 words per minute
+        return $minutes . ' min read';
     }
 
     public static function boot()

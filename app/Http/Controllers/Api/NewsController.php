@@ -29,6 +29,26 @@ class NewsController extends Controller
     }
 
     /**
+     * Get published news for public homepage display.
+     */
+    public function getPublicNews(Request $request): JsonResponse
+    {
+        $limit = $request->get('limit', 10);
+
+        $news = News::where('status', 'published')
+            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $news,
+            'count' => $news->count()
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request): JsonResponse
@@ -41,6 +61,7 @@ class NewsController extends Controller
             'author_title' => 'required|string|max:255',
             'date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured' => 'boolean',
             'status' => 'in:published,archived',
         ]);
 
@@ -103,6 +124,7 @@ class NewsController extends Controller
             'author_title' => 'required|string|max:255',
             'date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured' => 'boolean',
             'status' => 'in:published,archived',
         ]);
 
