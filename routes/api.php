@@ -32,6 +32,9 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+// Public news endpoint for homepage
+Route::get('/news/public', [NewsController::class, 'getPublicNews']);
+
 // Protected user route
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
