@@ -34,6 +34,7 @@ Route::prefix('admin')->group(function () {
 
 // Public news endpoint for homepage
 Route::get('/news/public', [NewsController::class, 'getPublicNews']);
+Route::get('/events', [EventController::class, 'index']);
 
 // Protected user route
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
